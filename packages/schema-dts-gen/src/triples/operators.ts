@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2023 Google LLC, 2024 Warren Halderman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-import {Store} from 'n3';
-import {GetTypes, IsType} from './wellKnown.js';
-import type {TypedTopic} from './wellKnown.js';
+import type {Store} from 'n3';
+import {GetTypes, IsType, type TypedTopic} from './wellKnown.js';
 
 export function asTopicArray(store: Store): TypedTopic[] {
-  return store
-    .getSubjects(null, null, null)
-    .map(subject => ({
+  return Array.from(store.getSubjects(null,null,null), (subject) => {
+    const topic = {
       subject,
       quads: store.getQuads(subject, null, null, null),
-    }))
-    .map(topic => ({
+    };
+    return {
       subject: topic.subject,
       quads: topic.quads.filter(value => !IsType(value.predicate)),
       types: GetTypes(topic.quads),
-    }));
+    };
+  })
 }
