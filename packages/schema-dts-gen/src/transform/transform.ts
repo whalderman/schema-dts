@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2023 Google LLC, 2024 Warren Halderman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ export async function WriteDeclarations(
   const classes = ProcessClasses(topics);
   ProcessProperties(topics, classes);
   ProcessEnums(topics, classes);
-  const sorted = Array.from(classes.values()).sort(Sort);
+  const sorted = [...classes.values()].sort(Sort);
 
   const properties = {
     hasRole: !!(
