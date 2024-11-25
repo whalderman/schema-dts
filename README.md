@@ -1,8 +1,3 @@
-[![Build Status](https://github.com/google/schema-dts/actions/workflows/ci.yml/badge.svg)](https://github.com/google/schema-dts/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/google/schema-dts/badge.svg?branch=main)](https://coveralls.io/github/google/schema-dts?branch=main)
-[![schema-dts npm version](https://badge.fury.io/js/schema-dts.svg)](https://www.npmjs.com/package/schema-dts)
-[![schema-dts-gen version](https://badge.fury.io/js/schema-dts-gen.svg)](https://www.npmjs.com/package/schema-dts-gen)
-
 # schema-dts
 
 JSON-LD TypeScript types for Schema.org vocabulary.
@@ -16,12 +11,12 @@ completions and stricter validation.
 
 This repository contains two NPM packages:
 
-- **[schema-dts-gen](https://www.npmjs.com/package/schema-dts-gen)** Providing a
-  command-line tool to generate TypeScript files based on a specific Schema
-  version and layer.
-- **[schema-dts](https://www.npmjs.com/package/schema-dts)** Pre-packaged
-  TypeScript typings of latest Schema.org schema, without
-  [pending](https://pending.schema.org/) and other non-core layers.
+-   **[schema-dts-gen](https://www.npmjs.com/package/schema-dts-gen)** Providing a
+    command-line tool to generate TypeScript files based on a specific Schema
+    version and layer.
+-   **[schema-dts](https://www.npmjs.com/package/schema-dts)** Pre-packaged
+    TypeScript typings of latest Schema.org schema, without
+    [pending](https://pending.schema.org/) and other non-core layers.
 
 Note: This is not an officially supported Google product.
 
@@ -44,16 +39,16 @@ You will usually want your top-level item to include a `@context`, like
 can augment it with `WithContext`, e.g.:
 
 ```ts
-import type {Person, WithContext} from 'schema-dts';
+import type { Person, WithContext } from "schema-dts";
 
 const p: WithContext<Person> = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Eve',
-  affiliation: {
-    '@type': 'School',
-    name: 'Nice School',
-  },
+	"@context": "https://schema.org",
+	"@type": "Person",
+	name: "Eve",
+	affiliation: {
+		"@type": "School",
+		name: "Nice School",
+	},
 };
 ```
 
@@ -75,45 +70,45 @@ their parent. Other objects are defined at the top-level with an `@id`, because
 multiple nodes refer to them.
 
 ```ts
-import type {Graph} from 'schema-dts';
+import type { Graph } from "schema-dts";
 
 const graph: Graph = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Person',
-      '@id': 'https://my.site/#alyssa',
-      name: 'Alyssa P. Hacker',
-      hasOccupation: {
-        '@type': 'Occupation',
-        name: 'LISP Hacker',
-        qualifications: 'Knows LISP',
-      },
-      mainEntityOfPage: {'@id': 'https://my.site/about/#page'},
-      subjectOf: {'@id': 'https://my.site/about/#page'},
-    },
-    {
-      '@type': 'AboutPage',
-      '@id': 'https://my.site/#site',
-      url: 'https://my.site',
-      name: "Alyssa P. Hacker's Website",
-      inLanguage: 'en-US',
-      description: 'The personal website of LISP legend Alyssa P. Hacker',
-      mainEntity: {'@id': 'https://my.site/#alyssa'},
-    },
-    {
-      '@type': 'WebPage',
-      '@id': 'https://my.site/about/#page',
-      url: 'https://my.site/about/',
-      name: "About | Alyssa P. Hacker's Website",
-      inLanguage: 'en-US',
-      isPartOf: {
-        '@id': 'https://my.site/#site',
-      },
-      about: {'@id': 'https://my.site/#alyssa'},
-      mainEntity: {'@id': 'https://my.site/#alyssa'},
-    },
-  ],
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "Person",
+			"@id": "https://my.site/#alyssa",
+			name: "Alyssa P. Hacker",
+			hasOccupation: {
+				"@type": "Occupation",
+				name: "LISP Hacker",
+				qualifications: "Knows LISP",
+			},
+			mainEntityOfPage: { "@id": "https://my.site/about/#page" },
+			subjectOf: { "@id": "https://my.site/about/#page" },
+		},
+		{
+			"@type": "AboutPage",
+			"@id": "https://my.site/#site",
+			url: "https://my.site",
+			name: "Alyssa P. Hacker's Website",
+			inLanguage: "en-US",
+			description: "The personal website of LISP legend Alyssa P. Hacker",
+			mainEntity: { "@id": "https://my.site/#alyssa" },
+		},
+		{
+			"@type": "WebPage",
+			"@id": "https://my.site/about/#page",
+			url: "https://my.site/about/",
+			name: "About | Alyssa P. Hacker's Website",
+			inLanguage: "en-US",
+			isPartOf: {
+				"@id": "https://my.site/#site",
+			},
+			about: { "@id": "https://my.site/#alyssa" },
+			mainEntity: { "@id": "https://my.site/#alyssa" },
+		},
+	],
 };
 ```
 
@@ -127,28 +122,28 @@ The Schema Typings Generator is available in the
 
 Command line usage:
 
-- **Specify your ontology**
+-   **Specify your ontology**
 
-  - Specify **`--ontology`**: An HTTPs URL to an .nt NTriple file declaring your
-    ontology.
+    -   Specify **`--ontology`**: An HTTPs URL to an .nt NTriple file declaring your
+        ontology.
 
-    Must be compatible with Schema.org, including the Schema.org `DataType`s and
-    specifying a top-level `Thing` type.
+        Must be compatible with Schema.org, including the Schema.org `DataType`s and
+        specifying a top-level `Thing` type.
 
-- **`--context`**: Defaults to `https://schema.org`, the value or values to be
-  used with the `"@context"` property.
+-   **`--context`**: Defaults to `https://schema.org`, the value or values to be
+    used with the `"@context"` property.
 
-  Can be either a single URL, or a comma separated list of two or more name:URL
-  pairs.
+    Can be either a single URL, or a comma separated list of two or more name:URL
+    pairs.
 
-  The context affects names of string properties in types, as well as the values
-  of an object's `"@type"`.
+    The context affects names of string properties in types, as well as the values
+    of an object's `"@type"`.
 
-- **`--deprecated`**/**`--nodeprecated`**: Whether or not to include deprecated
-  Schema.org types and properties. When included, these types will still be
-  marked with `@deprecated` JSDOC tags.
+-   **`--deprecated`**/**`--nodeprecated`**: Whether or not to include deprecated
+    Schema.org types and properties. When included, these types will still be
+    marked with `@deprecated` JSDOC tags.
 
-- **`--verbose`**: Outputs additional logs and debugging notes to stderr.
+-   **`--verbose`**: Outputs additional logs and debugging notes to stderr.
 
 ## Developers
 

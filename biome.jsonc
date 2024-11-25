@@ -1,0 +1,52 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": [
+			"node_modules",
+			"dist",
+			"packagesschema-dtslib",
+			".github",
+			"schema-dts/lib",
+			"schema-dts/dist"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"performance": {
+				"all": true
+			},
+			"security": {
+				"all": true
+			},
+			"a11y": {
+				"useGenericFontNames": "off"
+			},
+			"style": {
+				"useConst": {
+					"fix": "none",
+					"level": "off" // issues with svelte $state
+				}
+			}
+		}
+	}
+}

@@ -1,96 +1,86 @@
 {
-  "name": "schema-dts-gen",
-  "version": "1.1.2",
-  "displayName": "schema-dts Generator",
-  "description": "Generate TypeScript Definitions for Schema.org Schema",
-  "author": "Eyas Sharaiha <eyas@google.com> (https://eyas.sh/)",
-  "maintainers": [
-    "Eyas Sharaiha <npm@eyas.sh> (https://eyas.sh/)"
-  ],
-  "contributors": [
-    "Eyas Sharaiha <npm@eyas.sh> (https://eyas.sh/)"
-  ],
-  "files": [
-    "dist/src/**/*"
-  ],
-  "types": "./dist/src/index.d.ts",
-  "main": "./dist/src/index.js",
-  "bin": {
-    "schema-dts-gen": "bin/schema-dts-gen.js"
-  },
-  "sideEffects": false,
-  "type": "module",
-  "devDependencies": {
-    "@jest/globals": "^29.4.3",
-    "@types/argparse": "^2.0.10",
-    "@types/array.prototype.flatmap": "^1.2.2",
-    "@types/diff": "^5.0.2",
-    "@types/jest": "^29.4.0",
-    "@types/n3": "^1.10.4",
-    "@types/node": "^18.14.1",
-    "@types/unist": "^2.0.6",
-    "cross-env": "^7.0.3"
-  },
-  "dependencies": {
-    "argparse": "^2.0.1",
-    "n3": "^1.16.3",
-    "rehype-minify-whitespace": "^5.0.1",
-    "rehype-parse": "^8.0.4",
-    "rehype-raw": "^6.1.1",
-    "remark-parse": "^10.0.1",
-    "remark-rehype": "^10.1.0",
-    "remark-wiki-link": "^1.0.4",
-    "unified": "^10.1.2"
-  },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "engineStrict": true,
-  "peerDependencies": {
-    "typescript": ">=4.9.5"
-  },
-  "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
-    "exclude": [
-      "**/*.d.ts",
-      "dist/**/*",
-      "coverage/**/*",
-      "test/**/*",
-      "src/cli/cli.ts"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "all": true
-  },
-  "keywords": [
-    "typescript",
-    "tsd",
-    "dts",
-    "schema.org",
-    "Semantic Web",
-    "semantic-web",
-    "Linked Data",
-    "linked-data",
-    "jsonld",
-    "JSON-LD",
-    "structured data",
-    "structured-data"
-  ],
-  "homepage": "https://opensource.google/projects/schema-dts",
-  "bugs": "https://github.com/google/schema-dts/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/google/schema-dts.git",
-    "directory": "packages/schema-dts-gen"
-  },
-  "license": "Apache-2.0",
-  "scripts": {
-    "lint:eslint": "eslint src/**/*.ts test/**/*.ts",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
-    "build": "tsc -b"
-  }
+	"name": "schema-dts-gen",
+	"version": "1.1.2",
+	"displayName": "schema-dts Generator",
+	"description": "Generate TypeScript Definitions for Schema.org Schema",
+	"author": "Eyas Sharaiha <eyas@google.com> (https://eyas.sh/), Warren Halderman <halderman.warren@gmail.com>",
+	"maintainers": ["Warren Halderman <halderman.warren@gmail.com>"],
+	"contributors": [
+		"Eyas Sharaiha <eyas@google.com> (https://eyas.sh/)",
+		"Warren Halderman <halderman.warren@gmail.com>"
+	],
+	"files": ["dist/src/**/*"],
+	"types": "./dist/src/index.d.ts",
+	"main": "./dist/src/index.js",
+	"bin": {
+		"schema-dts-gen": "bin/schema-dts-gen.js"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"devDependencies": {
+		"@types/argparse": "^2.0.17",
+		"@types/array.prototype.flatmap": "^1.2.6",
+		"@types/diff": "^5.2.3",
+		"@types/n3": "^1.21.1",
+		"@types/node": "^18.19.64",
+		"@types/unist": "^2.0.11",
+		"cross-env": "^7.0.3"
+	},
+	"dependencies": {
+		"argparse": "^2.0.1",
+		"n3": "^1.23.0",
+		"rehype-minify-whitespace": "^5.0.1",
+		"rehype-parse": "^8.0.5",
+		"rehype-raw": "^6.1.1",
+		"remark-parse": "^10.0.2",
+		"remark-rehype": "^10.1.0",
+		"remark-wiki-link": "^1.0.4",
+		"unified": "^10.1.2"
+	},
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"engineStrict": true,
+	"peerDependencies": {
+		"typescript": ">=4.9.5"
+	},
+	"nyc": {
+		"extension": [".ts", ".tsx"],
+		"exclude": [
+			"**/*.d.ts",
+			"dist/**/*",
+			"coverage/**/*",
+			"test/**/*",
+			"src/cli/cli.ts"
+		],
+		"reporter": ["html"],
+		"all": true
+	},
+	"keywords": [
+		"typescript",
+		"tsd",
+		"dts",
+		"schema.org",
+		"Semantic Web",
+		"semantic-web",
+		"Linked Data",
+		"linked-data",
+		"jsonld",
+		"JSON-LD",
+		"structured data",
+		"structured-data"
+	],
+	"homepage": "https://opensource.google/projects/schema-dts",
+	"bugs": "https://github.com/whalderman/schema-dts/issues",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/whalderman/schema-dts.git",
+		"directory": "packages/schema-dts-gen"
+	},
+	"license": "Apache-2.0",
+	"scripts": {
+		"lint:biome": "biome check src/**/*.ts test/**/*.ts",
+		"test": "node --test",
+		"build": "tsc -b"
+	}
 }

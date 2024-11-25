@@ -1,7 +1,3 @@
-[![Build Status](https://github.com/google/schema-dts/actions/workflows/ci.yml/badge.svg)](https://github.com/google/schema-dts/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/google/schema-dts/badge.svg?branch=main)](https://coveralls.io/github/google/schema-dts?branch=main)
-[![schema-dts-gen version](https://badge.fury.io/js/schema-dts-gen.svg)](https://www.npmjs.com/package/schema-dts-gen)
-
 # schema-dts-gen
 
 JSONG-LD TypeScript typing generator for Schema.org vocabulary & related
@@ -26,25 +22,25 @@ npx schema-dts-gen --ontology=https://schema.org/version/latest/schemaorg-all-ht
 
 Command line usage:
 
-- **Specify your ontology**
+-   **Specify your ontology**
 
-  - Specify **`--ontology`**: An HTTPs URL to an .nt NTriple file declaring your
-    ontology.
+    -   Specify **`--ontology`**: An HTTPs URL to an .nt NTriple file declaring your
+        ontology.
 
-    Must be compatible with Schema.org, including the Schema.org `DataType`s and
-    specifying a top-level `Thing` type.
+        Must be compatible with Schema.org, including the Schema.org `DataType`s and
+        specifying a top-level `Thing` type.
 
-- **`--context`**: Defaults to `https://schema.org`, the value or values to be
-  used with the `"@context"` property.
+-   **`--context`**: Defaults to `https://schema.org`, the value or values to be
+    used with the `"@context"` property.
 
-  Can be either a single URL, or a comma separated list of two or more name:URL
-  pairs.
+    Can be either a single URL, or a comma separated list of two or more name:URL
+    pairs.
 
-  The context affects names of string properties in types, as well as the values
-  of an object's `"@type"`.
+    The context affects names of string properties in types, as well as the values
+    of an object's `"@type"`.
 
-- **`--deprecated`**/**`--nodeprecated`**: Whether or not to include deprecated
-  Schema.org types and properties. When included, these types will still be
-  marked with `@deprecated` JSDOC tags.
+-   **`--deprecated`**/**`--nodeprecated`**: Whether or not to include deprecated
+    Schema.org types and properties. When included, these types will still be
+    marked with `@deprecated` JSDOC tags.
 
-- **`--verbose`**: Outputs additional logs and debugging notes to stderr.
+-   **`--verbose`**: Outputs additional logs and debugging notes to stderr.
