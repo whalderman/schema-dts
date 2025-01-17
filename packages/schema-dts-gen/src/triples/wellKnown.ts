@@ -14,121 +14,125 @@
  * limitations under the License.
  */
 
-import {NamedNode} from 'n3';
-import type {Quad, Term, Quad_Object, Quad_Predicate, Quad_Subject} from 'n3';
+import { NamedNode } from "n3";
+import type { Quad, Quad_Object, Quad_Predicate, Quad_Subject, Term } from "n3";
 
 export interface Topic {
-  subject: Quad_Subject;
-  quads: Quad[];
+	subject: Quad_Subject;
+	quads: Quad[];
 }
 
 export interface TypedTopic extends Topic {
-  types: readonly NamedNode[];
+	types: readonly NamedNode[];
 }
 
-const rdfSchemaPrefix = 'http://www.w3.org/2000/01/rdf-schema#';
-const rdfSyntaxPrefix = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-const schemaPrefix = ['http://schema.org/', 'https://schema.org/'] as const;
-const owlPrefix = 'http://www.w3.org/2002/07/owl#';
+const rdfSchemaPrefix = "http://www.w3.org/2000/01/rdf-schema#";
+const rdfSyntaxPrefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const schemaPrefix = ["http://schema.org/", "https://schema.org/"] as const;
+const owlPrefix = "http://www.w3.org/2002/07/owl#";
 
 function possibleTerms(
-  prefix: string | readonly string[],
-  names: string | readonly string[]
+	prefix: string | readonly string[],
+	names: string | readonly string[]
 ): NamedNode[] {
-  if (Array.isArray(prefix)) {
-    return prefix.map(p => possibleTerms(p, names)).flat();
-  }
-  if (Array.isArray(names)) {
-    return names.map(n => possibleTerms(prefix, n)).flat();
-  }
+	if (Array.isArray(prefix)) {
+		return prefix.flatMap((p) => possibleTerms(p, names));
+	}
+	if (Array.isArray(names)) {
+		return names.flatMap((n) => possibleTerms(prefix, n));
+	}
 
-  return [new NamedNode(`${prefix}${names}`)];
+	return [new NamedNode(`${prefix}${names}`)];
 }
 
 function debugStr(node: Quad | Term): string {
-  return JSON.stringify(node.toJSON(), undefined, 2);
+	return JSON.stringify(node.toJSON(), undefined, 2);
 }
 
 // Well-known properties
 const Type = new NamedNode(`${rdfSyntaxPrefix}type`);
-const Comment = possibleTerms(rdfSchemaPrefix, 'comment');
-const SubClassOf = possibleTerms(rdfSchemaPrefix, 'subClassOf');
+const Comment = possibleTerms(rdfSchemaPrefix, "comment");
+const SubClassOf = possibleTerms(rdfSchemaPrefix, "subClassOf");
 const DomainIncludes = [
-  ...possibleTerms(schemaPrefix, 'domainIncludes'),
-  // Technically "domainIncludes" and "domain" have different semantics.
-  // domainIncludes is repeated, to include a union of possible types in the
-  // domain. "domain" is expected to appear once. To use "domain" for a union of
-  // possible values, it is used with owl:unionOf and a list literal.
-  ...possibleTerms(rdfSchemaPrefix, 'domain'),
+	...possibleTerms(schemaPrefix, "domainIncludes"),
+	// Technically "domainIncludes" and "domain" have different semantics.
+	// domainIncludes is repeated, to include a union of possible types in the
+	// domain. "domain" is expected to appear once. To use "domain" for a union of
+	// possible values, it is used with owl:unionOf and a list literal.
+	...possibleTerms(rdfSchemaPrefix, "domain"),
 ];
 const RangeIncludes = [
-  ...possibleTerms(schemaPrefix, 'rangeIncludes'),
-  // See comment on domainIncludes vs domain above.
-  ...possibleTerms(rdfSchemaPrefix, 'range'),
+	...possibleTerms(schemaPrefix, "rangeIncludes"),
+	// See comment on domainIncludes vs domain above.
+	...possibleTerms(rdfSchemaPrefix, "range"),
 ];
-const SupersededBy = possibleTerms(schemaPrefix, 'supersededBy');
+const SupersededBy = possibleTerms(schemaPrefix, "supersededBy");
 
 // Well-known classes
 const Class = new NamedNode(`${rdfSchemaPrefix}Class`);
 const Property = new NamedNode(`${rdfSyntaxPrefix}Property`);
 const OWLProperty = possibleTerms(owlPrefix, [
-  'DatatypeProperty',
-  'ObjectProperty',
-  'FunctionalProperty',
-  'InverseFunctionalProperty',
-  'AnnotationProperty',
-  'SymmetricProperty',
-  'TransitiveProperty',
+	"DatatypeProperty",
+	"ObjectProperty",
+	"FunctionalProperty",
+	"InverseFunctionalProperty",
+	"AnnotationProperty",
+	"SymmetricProperty",
+	"TransitiveProperty",
 ]);
-const OWLClass = possibleTerms(owlPrefix, 'Class');
-const OWLOntology = possibleTerms(owlPrefix, 'Ontology');
-const DataType = possibleTerms(schemaPrefix, 'DataType');
+const OWLClass = possibleTerms(owlPrefix, "Class");
+const OWLOntology = possibleTerms(owlPrefix, "Ontology");
+const DataType = possibleTerms(schemaPrefix, "DataType");
 
 /**
  * If an ObjectPredicate represents a comment, returns the comment. Otherwise
  * returns null.
  */
-export function GetComment(q: Quad): {comment: string} | null {
-  if (Comment.some(c => c.equals(q.predicate))) {
-    if (q.object.termType === 'Literal') return {comment: q.object.value};
-    throw new Error(
-      `Unexpected Comment predicate with non-string object: ${debugStr(q)}.`
-    );
-  }
-  return null;
+export function GetComment(q: Quad): { comment: string } | null {
+	if (Comment.some((c) => c.equals(q.predicate))) {
+		if (q.object.termType === "Literal") return { comment: q.object.value };
+		throw new Error(
+			`Unexpected Comment predicate with non-string object: ${debugStr(
+				q
+			)}.`
+		);
+	}
+	return null;
 }
 
 /**
  * If an ObjectPredicate represents a subClass relation, returns the parent
  * class. Otherwise returns null.
  */
-export function GetSubClassOf(q: Quad): {subClassOf: NamedNode} | null {
-  if (SubClassOf.some(s => s.equals(q.predicate))) {
-    if (q.object.termType !== 'NamedNode') {
-      throw new Error(
-        `Unexpected object for predicate 'subClassOf': ${debugStr(q)}`
-      );
-    }
+export function GetSubClassOf(q: Quad): { subClassOf: NamedNode } | null {
+	if (SubClassOf.some((s) => s.equals(q.predicate))) {
+		if (q.object.termType !== "NamedNode") {
+			throw new Error(
+				`Unexpected object for predicate 'subClassOf': ${debugStr(q)}`
+			);
+		}
 
-    return {subClassOf: q.object};
-  }
-  return null;
+		return { subClassOf: q.object };
+	}
+	return null;
 }
 
 /** Return true iff this object is a subclass of some other entity. */
 export function IsSubclass(topic: TypedTopic) {
-  return topic.quads.some(q => SubClassOf.some(s => s.equals(q.predicate)));
+	return topic.quads.some((q) =>
+		SubClassOf.some((s) => s.equals(q.predicate))
+	);
 }
 
 /** Returns true iff a node corresponds to http://schema.org/DataType */
 export function IsDataType(t: Quad_Subject): boolean {
-  return DataType.some(d => d.equals(t));
+	return DataType.some((d) => d.equals(t));
 }
 
 /** Returns true iff a Topic represents a DataType. */
 export function ClassIsDataType(topic: TypedTopic): boolean {
-  if (topic.types.some(IsDataType)) return true;
-  return false;
+	if (topic.types.some(IsDataType)) return true;
+	return false;
 }
 
 /**
@@ -142,39 +146,39 @@ export function ClassIsDataType(topic: TypedTopic): boolean {
  * classes.
  */
 export function IsDirectlyNamedClass(topic: TypedTopic): boolean {
-  // Skip anything that isn't a class.
-  return topic.types.some(IsClassType);
+	// Skip anything that isn't a class.
+	return topic.types.some(IsClassType);
 }
 
 /**
  * Returns true iff a Predicate corresponds to http://schema.org/domainIncludes
  */
 export function IsDomainIncludes(value: Quad_Predicate): boolean {
-  return DomainIncludes.some(d => d.equals(value));
+	return DomainIncludes.some((d) => d.equals(value));
 }
 /**
  * Returns true iff a Predicate corresponds to http://schema.org/rangeIncludes
  */
 export function IsRangeIncludes(value: Quad_Predicate): boolean {
-  return RangeIncludes.some(r => r.equals(value));
+	return RangeIncludes.some((r) => r.equals(value));
 }
 /**
  * Returns true iff a Predicate corresponds to http://schema.org/supersededBy.
  */
 export function IsSupersededBy(value: Quad_Predicate): boolean {
-  return SupersededBy.some(s => s.equals(value));
+	return SupersededBy.some((s) => s.equals(value));
 }
 /**
  * Returns true iff a Predicate corresponds to
  * http://www.w3.org/1999/02/22-rdf-syntax-ns#type.
  */
 export function IsType(predicate: Quad_Predicate): boolean {
-  return predicate.equals(Type);
+	return predicate.equals(Type);
 }
 
 /** Returns iff an Object can be described as a Type Name. */
 export function IsTypeName(value: Quad_Object): value is NamedNode {
-  return value.termType === 'NamedNode';
+	return value.termType === "NamedNode";
 }
 
 /**
@@ -182,13 +186,13 @@ export function IsTypeName(value: Quad_Object): value is NamedNode {
  * http://www.w3.org/1999/02/22-rdf-syntax-ns#type, returns a Type it describes.
  */
 export function GetType(value: Quad): NamedNode | null {
-  if (IsType(value.predicate)) {
-    if (!IsTypeName(value.object)) {
-      throw new Error(`Unexpected type ${debugStr(value)}`);
-    }
-    return value.object;
-  }
-  return null;
+	if (IsType(value.predicate)) {
+		if (!IsTypeName(value.object)) {
+			throw new Error(`Unexpected type ${debugStr(value)}`);
+		}
+		return value.object;
+	}
+	return null;
 }
 
 /**
@@ -196,12 +200,12 @@ export function GetType(value: Quad): NamedNode | null {
  * http://www.w3.org/1999/02/22-rdf-syntax-ns#type predicates.
  */
 export function GetTypes(values: readonly Quad[]): readonly NamedNode[] {
-  const types = values.map(GetType).filter((t): t is NamedNode => !!t);
+	const types = values.map(GetType).filter((t): t is NamedNode => !!t);
 
-  // Allow empty types. Some custom schema assume "transitive" typing, e.g.
-  // gs1 has a TypeCode class which is an rdfs:Class, but its subclasses are
-  // not explicitly described as an rdfs:Class.
-  return types;
+	// Allow empty types. Some custom schema assume "transitive" typing, e.g.
+	// gs1 has a TypeCode class which is an rdfs:Class, but its subclasses are
+	// not explicitly described as an rdfs:Class.
+	return types;
 }
 
 /**
@@ -209,7 +213,7 @@ export function GetTypes(values: readonly Quad[]): readonly NamedNode[] {
  * http://www.w3.org/2000/01/rdf-schema#Class
  */
 export function IsClassType(type: Term): boolean {
-  return Class.equals(type);
+	return Class.equals(type);
 }
 
 /**
@@ -217,7 +221,7 @@ export function IsClassType(type: Term): boolean {
  * http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
  */
 export function IsPropertyType(type: Term): boolean {
-  return Property.equals(type);
+	return Property.equals(type);
 }
 
 /**
@@ -227,18 +231,19 @@ export function IsPropertyType(type: Term): boolean {
  * its "Type".
  */
 export function HasEnumType(types: readonly NamedNode[]): boolean {
-  for (const type of types) {
-    // Skip well-known types.
-    if (IsClassType(type) || IsPropertyType(type) || IsDataType(type)) continue;
+	for (const type of types) {
+		// Skip well-known types.
+		if (IsClassType(type) || IsPropertyType(type) || IsDataType(type))
+			continue;
 
-    // Skip OWL "meta" types
-    if (OWLClass.some(c => c.equals(type))) continue;
-    if (OWLProperty.some(c => c.equals(type))) continue;
-    if (OWLOntology.some(c => c.equals(type))) continue;
+		// Skip OWL "meta" types
+		if (OWLClass.some((c) => c.equals(type))) continue;
+		if (OWLProperty.some((c) => c.equals(type))) continue;
+		if (OWLOntology.some((c) => c.equals(type))) continue;
 
-    // If we're here, this is a 'Type' that is not well known.
-    return true;
-  }
-  // Types are only well-known.
-  return false;
+		// If we're here, this is a 'Type' that is not well known.
+		return true;
+	}
+	// Types are only well-known.
+	return false;
 }

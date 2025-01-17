@@ -1,12 +1,12 @@
 {
-  "extends": "../../../tsconfig-base.json",
-  "compilerOptions": {
-    "outDir": "../dist/test",
-    "rootDir": "."
-  },
-  "references": [
-    {
-      "path": "../src"
-    }
-  ]
+	"extends": "../../../tsconfig-base.json",
+	"compilerOptions": {
+		"outDir": "../dist/test",
+		"rootDir": "."
+	},
+	"references": [
+		{
+			"path": "../src"
+		}
+	]
 }

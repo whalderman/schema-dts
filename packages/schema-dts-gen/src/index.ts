@@ -15,12 +15,12 @@
  */
 
 // Public Declarations only:
-export {WriteDeclarations} from './transform/transform.js';
+export { WriteDeclarations } from "./transform/transform.js";
 
-export {load as loadTriples} from './triples/reader.js';
-export * from './triples/term_utils.js';
-export * from './triples/wellKnown.js';
+export { load as loadTriples } from "./triples/reader.js";
+export * from "./triples/term_utils.js";
+export * from "./triples/wellKnown.js";
 
-export * from './ts/class.js';
-export * from './ts/enum.js';
-export * from './ts/property.js';
+export * from "./ts/class.js";
+export * from "./ts/enum.js";
+export * from "./ts/property.js";

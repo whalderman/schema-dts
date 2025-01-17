@@ -17,8 +17,8 @@
  * function, for testing.
  */
 
-import {ClientRequest, IncomingMessage} from 'http';
-import https from 'https';
+import type type type {ClientRequest, IncomingMessage} from 'node:http';
+import https from 'node:https';
 
 import {main} from '../../src/cli/internal/main.js';
 import {SetLogger, SetOptions} from '../../src/logging/index.js';

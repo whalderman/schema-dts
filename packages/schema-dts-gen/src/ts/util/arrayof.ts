@@ -15,7 +15,7 @@
  */
 
 export function arrayOf<T>(
-  ...args: Array<T | undefined | null | 0 | '' | false>
+	...args: Array<T | undefined | null | 0 | "" | false>
 ): T[] {
-  return args.filter((elem): elem is T => !!elem);
+	return args.filter((elem): elem is T => !!elem);
 }

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import type {Store} from 'n3';
-import {GetTypes, IsType, type TypedTopic} from './wellKnown.js';
+import type { Store } from "n3";
+import { GetTypes, IsType, type TypedTopic } from "./wellKnown.js";
 
 export function asTopicArray(store: Store): TypedTopic[] {
-  return Array.from(store.getSubjects(null,null,null), (subject) => {
-    const topic = {
-      subject,
-      quads: store.getQuads(subject, null, null, null),
-    };
-    return {
-      subject: topic.subject,
-      quads: topic.quads.filter(value => !IsType(value.predicate)),
-      types: GetTypes(topic.quads),
-    };
-  })
+	return Array.from(store.getSubjects(null, null, null), (subject) => {
+		const topic = {
+			subject,
+			quads: store.getQuads(subject, null, null, null),
+		};
+		return {
+			subject: topic.subject,
+			quads: topic.quads.filter((value) => !IsType(value.predicate)),
+			types: GetTypes(topic.quads),
+		};
+	});
 }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import {NamedNode, Quad} from 'n3';
+import type { NamedNode, Quad } from "n3";
 
-import {Log} from '../logging/index.js';
-import {shortStr} from '../triples/term_utils.js';
-import {HasEnumType, TypedTopic} from '../triples/wellKnown.js';
-import {ClassMap} from '../ts/class.js';
-import {EnumValue} from '../ts/enum.js';
-import {assertIs} from '../util/assert.js';
+import { Log } from "../logging/index.js";
+import { shortStr } from "../triples/term_utils.js";
+import { HasEnumType, type TypedTopic } from "../triples/wellKnown.js";
+import type { ClassMap } from "../ts/class.js";
+import { EnumValue } from "../ts/enum.js";
+import { assertIs } from "../util/assert.js";
 
 /**
  * Annotates classes with any Enum values they blong to.
@@ -30,25 +30,33 @@ import {assertIs} from '../util/assert.js';
  * @param classes return value of `ProcessClasses`.
  */
 export function ProcessEnums(topics: readonly TypedTopic[], classes: ClassMap) {
-  // Process Enums
-  for (const topic of topics) {
-    if (!HasEnumType(topic.types)) continue;
+	// Process Enums
+	for (const topic of topics) {
+		if (!HasEnumType(topic.types)) continue;
 
-    // Everything Here should be an enum.
-    assertIs(topic.subject, (s): s is NamedNode => s.termType === 'NamedNode');
-    const enumValue = new EnumValue(topic.subject, topic.types, classes);
+		// Everything Here should be an enum.
+		assertIs(
+			topic.subject,
+			(s): s is NamedNode => s.termType === "NamedNode"
+		);
+		const enumValue = new EnumValue(topic.subject, topic.types, classes);
 
-    const skipped: Quad[] = [];
-    for (const v of topic.quads) {
-      if (!enumValue.add(v)) skipped.push(v);
-    }
+		const skipped: Quad[] = [];
+		for (const v of topic.quads) {
+			if (!enumValue.add(v)) skipped.push(v);
+		}
 
-    if (skipped.length > 0) {
-      Log(
-        `For Enum Item ${shortStr(topic.subject)}, did not process:\n\t${skipped
-          .map(q => `(${shortStr(q.predicate)}, ${shortStr(q.object)})`)
-          .join('\n\t')}`
-      );
-    }
-  }
+		if (skipped.length > 0) {
+			Log(
+				`For Enum Item ${shortStr(
+					topic.subject
+				)}, did not process:\n\t${skipped
+					.map(
+						(q) =>
+							`(${shortStr(q.predicate)}, ${shortStr(q.object)})`
+					)
+					.join("\n\t")}`
+			);
+		}
+	}
 }

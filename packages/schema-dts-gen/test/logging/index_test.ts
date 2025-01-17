@@ -13,48 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {jest} from '@jest/globals';
-import type {Mock} from 'jest-mock';
+import { jest } from "@jest/globals";
+import type { Mock } from "jest-mock";
 
-import {Log, SetLogger, SetOptions} from '../../src/logging/index.js';
+import { Log, SetLogger, SetOptions } from "../../src/logging/index.js";
 
-describe('Log', () => {
-  let logErr: Mock<Console['error']>;
-  let ResetLogger: undefined | (() => void) = undefined;
+describe("Log", () => {
+	let logErr: Mock<Console["error"]>;
+	let ResetLogger: undefined | (() => void) = undefined;
 
-  beforeEach(() => {
-    logErr = jest.fn();
-    ResetLogger = SetLogger(logErr);
-  });
+	beforeEach(() => {
+		logErr = jest.fn();
+		ResetLogger = SetLogger(logErr);
+	});
 
-  afterEach(() => {
-    ResetLogger && ResetLogger();
-  });
+	afterEach(() => {
+		ResetLogger?.();
+	});
 
-  it("doesn't log by default", () => {
-    Log('Foo');
-    expect(logErr).not.toBeCalled();
-  });
+	it("doesn't log by default", () => {
+		Log("Foo");
+		expect(logErr).not.toBeCalled();
+	});
 
-  it("doesn't log when verbose=false", () => {
-    SetOptions({verbose: false});
-    Log('Foo');
-    expect(logErr).not.toBeCalled();
-  });
+	it("doesn't log when verbose=false", () => {
+		SetOptions({ verbose: false });
+		Log("Foo");
+		expect(logErr).not.toBeCalled();
+	});
 
-  it('logs when verbose=true', () => {
-    SetOptions({verbose: true});
-    Log('Foo');
-    expect(logErr).toBeCalledWith('Foo');
-  });
+	it("logs when verbose=true", () => {
+		SetOptions({ verbose: true });
+		Log("Foo");
+		expect(logErr).toBeCalledWith("Foo");
+	});
 
-  it('stops logging after turned off', () => {
-    SetOptions({verbose: true});
-    Log('Foo');
-    SetOptions({verbose: false});
-    Log('Bar');
+	it("stops logging after turned off", () => {
+		SetOptions({ verbose: true });
+		Log("Foo");
+		SetOptions({ verbose: false });
+		Log("Bar");
 
-    expect(logErr).toBeCalledWith('Foo');
-    expect(logErr).not.toBeCalledWith('Bar');
-  });
+		expect(logErr).toBeCalledWith("Foo");
+		expect(logErr).not.toBeCalledWith("Bar");
+	});
 });

@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-import type {NamedNode} from 'n3';
-import {namedPortion} from '../../triples/term_utils.js';
+import type { NamedNode } from "n3";
+import { namedPortion } from "../../triples/term_utils.js";
 
 function decodeOr(component: string) {
-  try {
-    return decodeURIComponent(component);
-  } catch {
-    return component;
-  }
+	try {
+		return decodeURIComponent(component);
+	} catch {
+		return component;
+	}
 }
 
 export function toClassName(subject: NamedNode): string {
-  let sanitizedName = decodeOr(namedPortion(subject)).replace(
-    /[^A-Za-z0-9_]/g,
-    '_'
-  );
+	let sanitizedName = decodeOr(namedPortion(subject)).replace(
+		/[^A-Za-z0-9_]/g,
+		"_"
+	);
 
-  // No leading numbers.
-  if (/^[0-9]/g.test(sanitizedName)) {
-    sanitizedName = `_${sanitizedName}`;
-  }
+	// No leading numbers.
+	if (/^[0-9]/g.test(sanitizedName)) {
+		sanitizedName = `_${sanitizedName}`;
+	}
 
-  return sanitizedName;
+	return sanitizedName;
 }

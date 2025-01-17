@@ -13,52 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {jest} from '@jest/globals';
+import { jest } from "@jest/globals";
 
-import {ParseFlags} from '../../src/cli/args.js';
-import {ArgumentParser} from 'argparse';
+import { ArgumentParser } from "argparse";
+import { ParseFlags } from "../../src/cli/args.js";
 
-describe('ParseFlags', () => {
-  it('defaults', () => {
-    const options = ParseFlags([])!;
-    expect(options).not.toBeUndefined();
-    expect(options.context).toBe('https://schema.org');
-    expect(options.deprecated).toBe(true);
-    expect(options.verbose).toBe(false);
-    expect(options.file).toBeUndefined();
+describe("ParseFlags", () => {
+	it("defaults", () => {
+		const options = ParseFlags([]);
+		expect(options).not.toBeUndefined();
+		expect(options.context).toBe("https://schema.org");
+		expect(options.deprecated).toBe(true);
+		expect(options.verbose).toBe(false);
+		expect(options.file).toBeUndefined();
 
-    expect(options.ontology).toBe(
-      'https://schema.org/version/latest/schemaorg-all-https.nt'
-    );
-  });
+		expect(options.ontology).toBe(
+			"https://schema.org/version/latest/schemaorg-all-https.nt"
+		);
+	});
 
-  it('custom ontology', () => {
-    const options = ParseFlags(['--ontology', 'https://google.com/foo'])!;
-    expect(options).not.toBeUndefined();
+	it("custom ontology", () => {
+		const options = ParseFlags(["--ontology", "https://google.com/foo"]);
+		expect(options).not.toBeUndefined();
 
-    expect(options.ontology).toBe('https://google.com/foo');
-  });
+		expect(options.ontology).toBe("https://google.com/foo");
+	});
 
-  it('custom file', () => {
-    const options = ParseFlags(['--file', './ontology.nt'])!;
-    expect(options).not.toBeUndefined();
+	it("custom file", () => {
+		const options = ParseFlags(["--file", "./ontology.nt"]);
+		expect(options).not.toBeUndefined();
 
-    expect(options.file).toBe('./ontology.nt');
-  });
+		expect(options.file).toBe("./ontology.nt");
+	});
 
-  describe('deprecated fields', () => {
-    beforeEach(() => {
-      jest.spyOn(ArgumentParser.prototype, 'exit').mockImplementation(e => {
-        throw new Error(`${e}`);
-      });
-    });
+	describe("deprecated fields", () => {
+		beforeEach(() => {
+			jest.spyOn(ArgumentParser.prototype, "exit").mockImplementation(
+				(e) => {
+					throw new Error(`${e}`);
+				}
+			);
+		});
 
-    it('--layer', () => {
-      expect(() => ParseFlags(['--layer', 'foo'])).toThrow();
-    });
+		it("--layer", () => {
+			expect(() => ParseFlags(["--layer", "foo"])).toThrow();
+		});
 
-    it('--schema', () => {
-      expect(() => ParseFlags(['--schema', 'bar'])).toThrow();
-    });
-  });
+		it("--schema", () => {
+			expect(() => ParseFlags(["--schema", "bar"])).toThrow();
+		});
+	});
 });

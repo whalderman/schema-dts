@@ -17,13 +17,13 @@
  * correspond to full comparisons of a generate .ts output based on a set of
  * Triples representing an entire ontology.
  */
-import {basename} from 'path';
+import { basename } from "node:path";
 
-import {inlineCli} from '../helpers/main_driver.js';
+import { inlineCli } from "../helpers/main_driver.js";
 
 test(`baseline_${basename(import.meta.url)}`, async () => {
-  const {actual, actualLogs} = await inlineCli(
-    `
+	const { actual, actualLogs } = await inlineCli(
+		`
 <http://schema.org/name> <http://schema.org/rangeIncludes> <http://schema.org/Text> .
 <http://schema.org/name> <http://schema.org/domainIncludes> <http://schema.org/Thing> .
 <http://schema.org/name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
@@ -37,14 +37,14 @@ test(`baseline_${basename(import.meta.url)}`, async () => {
 <http://schema.org/Text> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/DataType> .
 <http://schema.org/Text> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 `,
-    [
-      '--ontology',
-      `https://fake.com/${basename(import.meta.url)}.nt`,
-      '--verbose',
-    ]
-  );
+		[
+			"--ontology",
+			`https://fake.com/${basename(import.meta.url)}.nt`,
+			"--verbose",
+		]
+	);
 
-  expect(actual).toMatchInlineSnapshot(`
+	expect(actual).toMatchInlineSnapshot(`
     "/** Used at the top-level node to indicate the context for the JSON-LD objects used. The context provided in this type is compatible with the keys and URLs in the rest of this generated file. */
     export type WithContext<T extends Thing> = T & {
         "@context": "https://schema.org";
@@ -77,7 +77,7 @@ test(`baseline_${basename(import.meta.url)}`, async () => {
 
     "
   `);
-  expect(actualLogs).toMatchInlineSnapshot(`
+	expect(actualLogs).toMatchInlineSnapshot(`
     "Loading Ontology from URL: https://fake.com/category_test.ts.nt
     Got Response 200: Ok.
     Class Distillery: Did not add [(source 743),(category issue-743),(label Distillery)]

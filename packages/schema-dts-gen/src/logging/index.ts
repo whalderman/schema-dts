@@ -17,21 +17,21 @@
 let verbose = false;
 let logger = console.error;
 
-export function SetOptions(options: {verbose: boolean}): void {
-  verbose = options.verbose;
+export function SetOptions(options: { verbose: boolean }): void {
+	verbose = options.verbose;
 }
 
 export function Log(message: string): void {
-  if (verbose) {
-    logger(message);
-  }
+	if (verbose) {
+		logger(message);
+	}
 }
 
 export function SetLogger(newLogger: (msg: string) => void) {
-  const previousLogger = logger;
-  function RestoreLogger() {
-    logger = previousLogger;
-  }
-  logger = newLogger;
-  return RestoreLogger;
+	const previousLogger = logger;
+	function RestoreLogger() {
+		logger = previousLogger;
+	}
+	logger = newLogger;
+	return RestoreLogger;
 }

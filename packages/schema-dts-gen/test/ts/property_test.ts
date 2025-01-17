@@ -14,148 +14,154 @@
  * limitations under the License.
  */
 
-import {Literal, NamedNode, Quad} from 'n3';
-import {PropertyType} from '../../src/ts/property.js';
-import {makeClass, makeClassMap} from '../helpers/make_class.js';
+import { Literal, NamedNode, Quad } from "n3";
+import { PropertyType } from "../../src/ts/property.js";
+import { makeClass, makeClassMap } from "../helpers/make_class.js";
 
-describe('PropertyType', () => {
-  let prop: PropertyType;
+describe("PropertyType", () => {
+	let prop: PropertyType;
 
-  beforeEach(() => {
-    prop = new PropertyType(new NamedNode('https://schema.org/name'));
-  });
+	beforeEach(() => {
+		prop = new PropertyType(new NamedNode("https://schema.org/name"));
+	});
 
-  it('initial properties when empty', () => {
-    expect(prop.comment).toBeUndefined();
-    expect(prop.deprecated).toBe(false);
-  });
+	it("initial properties when empty", () => {
+		expect(prop.comment).toBeUndefined();
+		expect(prop.deprecated).toBe(false);
+	});
 
-  describe('add', () => {
-    describe('rangeIncludes', () => {
-      const rangeIncludes = () =>
-        new NamedNode('https://schema.org/rangeIncludes');
+	describe("add", () => {
+		describe("rangeIncludes", () => {
+			const rangeIncludes = () =>
+				new NamedNode("https://schema.org/rangeIncludes");
 
-      it('non-type rangeIncludes object fails', () => {
-        expect(() =>
-          prop.add(
-            new Quad(
-              new NamedNode('https://schema.org/Foo'),
-              rangeIncludes(),
-              new Literal('"foo"')
-            ),
-            new Map()
-          )
-        ).toThrowError('Type expected to be a UrlNode');
-      });
+			it("non-type rangeIncludes object fails", () => {
+				expect(() =>
+					prop.add(
+						new Quad(
+							new NamedNode("https://schema.org/Foo"),
+							rangeIncludes(),
+							new Literal('"foo"')
+						),
+						new Map()
+					)
+				).toThrowError("Type expected to be a UrlNode");
+			});
 
-      it("type rangeIncludes object fails when class doesn't exist", () => {
-        expect(() =>
-          prop.add(
-            new Quad(
-              new NamedNode('https://schema.org/Foo'),
-              rangeIncludes(),
-              new NamedNode('https://schema.org/Thing')
-            ),
-            new Map()
-          )
-        ).toThrowError('Could not find class for https://schema.org/Thing');
-      });
+			it("type rangeIncludes object fails when class doesn't exist", () => {
+				expect(() =>
+					prop.add(
+						new Quad(
+							new NamedNode("https://schema.org/Foo"),
+							rangeIncludes(),
+							new NamedNode("https://schema.org/Thing")
+						),
+						new Map()
+					)
+				).toThrowError(
+					"Could not find class for https://schema.org/Thing"
+				);
+			});
 
-      it('type rangeIncludes object succeeds', () => {
-        expect(
-          prop.add(
-            new Quad(
-              new NamedNode('https://schema.org/Foo'),
-              rangeIncludes(),
-              new NamedNode('https://schema.org/Thing')
-            ),
-            makeClassMap(makeClass('https://schema.org/Thing'))
-          )
-        ).toBe(true);
-      });
-    });
-  });
+			it("type rangeIncludes object succeeds", () => {
+				expect(
+					prop.add(
+						new Quad(
+							new NamedNode("https://schema.org/Foo"),
+							rangeIncludes(),
+							new NamedNode("https://schema.org/Thing")
+						),
+						makeClassMap(makeClass("https://schema.org/Thing"))
+					)
+				).toBe(true);
+			});
+		});
+	});
 
-  describe('domainIncludes', () => {
-    const domainIncludes = () =>
-      new NamedNode('https://schema.org/domainIncludes');
-    it('failed lookup throws', () => {
-      const classes = makeClassMap(makeClass('https://schema.org/Person'));
-      expect(() =>
-        prop.add(
-          new Quad(
-            new NamedNode('https://schema.org/Foo'),
-            domainIncludes(),
-            new NamedNode('https://schema.org/Thing')
-          ),
-          classes
-        )
-      ).toThrowError('Could not find class');
-    });
+	describe("domainIncludes", () => {
+		const domainIncludes = () =>
+			new NamedNode("https://schema.org/domainIncludes");
+		it("failed lookup throws", () => {
+			const classes = makeClassMap(
+				makeClass("https://schema.org/Person")
+			);
+			expect(() =>
+				prop.add(
+					new Quad(
+						new NamedNode("https://schema.org/Foo"),
+						domainIncludes(),
+						new NamedNode("https://schema.org/Thing")
+					),
+					classes
+				)
+			).toThrowError("Could not find class");
+		});
 
-    it('real lookup works', () => {
-      const classes = makeClassMap(makeClass('https://schema.org/Person'));
-      expect(
-        prop.add(
-          new Quad(
-            new NamedNode('https://schema.org/Foo'),
-            domainIncludes(),
-            new NamedNode('https://schema.org/Person')
-          ),
-          classes
-        )
-      ).toBe(true);
-    });
-  });
+		it("real lookup works", () => {
+			const classes = makeClassMap(
+				makeClass("https://schema.org/Person")
+			);
+			expect(
+				prop.add(
+					new Quad(
+						new NamedNode("https://schema.org/Foo"),
+						domainIncludes(),
+						new NamedNode("https://schema.org/Person")
+					),
+					classes
+				)
+			).toBe(true);
+		});
+	});
 
-  describe('supersededBy', () => {
-    it('always works', () => {
-      expect(
-        prop.add(
-          new Quad(
-            new NamedNode('https://schema.org/Foo'),
-            new NamedNode('https://schema.org/supersededBy'),
-            new NamedNode('https://schema.org/Person')
-          ),
-          new Map()
-        )
-      ).toBe(true);
+	describe("supersededBy", () => {
+		it("always works", () => {
+			expect(
+				prop.add(
+					new Quad(
+						new NamedNode("https://schema.org/Foo"),
+						new NamedNode("https://schema.org/supersededBy"),
+						new NamedNode("https://schema.org/Person")
+					),
+					new Map()
+				)
+			).toBe(true);
 
-      expect(prop.comment).toMatch(/@deprecated/g);
-      expect(prop.deprecated).toBe(true);
-    });
-  });
+			expect(prop.comment).toMatch(/@deprecated/g);
+			expect(prop.deprecated).toBe(true);
+		});
+	});
 
-  describe('comment', () => {
-    const comment = () =>
-      new NamedNode('http://www.w3.org/2000/01/rdf-schema#comment');
+	describe("comment", () => {
+		const comment = () =>
+			new NamedNode("http://www.w3.org/2000/01/rdf-schema#comment");
 
-    it('works with string', () => {
-      expect(
-        prop.add(
-          new Quad(
-            new NamedNode('https://schema.org/Foo'),
-            comment(),
-            new Literal('"foo"')
-          ),
-          new Map()
-        )
-      ).toBe(true);
+		it("works with string", () => {
+			expect(
+				prop.add(
+					new Quad(
+						new NamedNode("https://schema.org/Foo"),
+						comment(),
+						new Literal('"foo"')
+					),
+					new Map()
+				)
+			).toBe(true);
 
-      expect(prop.comment).toMatch(/foo/g);
-    });
+			expect(prop.comment).toMatch(/foo/g);
+		});
 
-    it('only supports strings as comments', () => {
-      expect(() =>
-        prop.add(
-          new Quad(
-            new NamedNode('https://schema.org/Foo'),
-            comment(),
-            new NamedNode('http://schema.org/Amazing')
-          ),
-          new Map()
-        )
-      ).toThrowError('non-string object');
-    });
-  });
+		it("only supports strings as comments", () => {
+			expect(() =>
+				prop.add(
+					new Quad(
+						new NamedNode("https://schema.org/Foo"),
+						comment(),
+						new NamedNode("http://schema.org/Amazing")
+					),
+					new Map()
+				)
+			).toThrowError("non-string object");
+		});
+	});
 });

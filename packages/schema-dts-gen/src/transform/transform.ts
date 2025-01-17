@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ts from 'typescript';
-const {
-  createPrinter,
-  createSourceFile,
-  EmitHint,
-  NewLineKind,
-  ScriptKind,
-  ScriptTarget,
-} = ts;
+import {
+	EmitHint,
+	NewLineKind,
+	ScriptKind,
+	ScriptTarget,
+	createPrinter,
+	createSourceFile,
+} from "typescript";
 
-import {asTopicArray} from '../triples/operators.js';
-import {Sort} from '../ts/class.js';
-import {Context} from '../ts/context.js';
+import { asTopicArray } from "../triples/operators.js";
+import { Sort } from "../ts/class.js";
+import type { Context } from "../ts/context.js";
 
-import {ProcessClasses} from './toClass.js';
-import {ProcessEnums} from './toEnum.js';
-import {ProcessProperties} from './toProperty.js';
-import {HelperTypes} from '../ts/helper_types.js';
+import { HelperTypes } from "../ts/helper_types.js";
+import { ProcessClasses } from "./toClass.js";
+import { ProcessEnums } from "./toEnum.js";
+import { ProcessProperties } from "./toProperty.js";
 
-import {Store} from 'n3';
+import type { Store } from "n3";
 
 /**
  * Writes TypeScript declarations for all Classes, Typedefs, and Enums
@@ -48,49 +47,53 @@ import {Store} from 'n3';
  * @returns Promise indicating completion.
  */
 export async function WriteDeclarations(
-  graph: Store,
-  includeDeprecated: boolean,
-  context: Context,
-  write: (content: string) => Promise<void> | void
+	graph: Store,
+	includeDeprecated: boolean,
+	context: Context,
+	write: (content: string) => Promise<void> | void
 ) {
-  const topics = asTopicArray(graph);
+	const topics = asTopicArray(graph);
 
-  const classes = ProcessClasses(topics);
-  ProcessProperties(topics, classes);
-  ProcessEnums(topics, classes);
-  const sorted = [...classes.values()].sort(Sort);
+	const classes = ProcessClasses(topics);
+	ProcessProperties(topics, classes);
+	ProcessEnums(topics, classes);
+	const sorted = [...classes.values()].sort(Sort);
 
-  const properties = {
-    hasRole: !!(
-      classes.get('http://schema.org/Role') ||
-      classes.get('https://schema.org/Role')
-    ),
-    skipDeprecatedProperties: !includeDeprecated,
-  };
+	const properties = {
+		hasRole: !!(
+			classes.get("http://schema.org/Role") ||
+			classes.get("https://schema.org/Role")
+		),
+		skipDeprecatedProperties: !includeDeprecated,
+	};
 
-  const source = createSourceFile(
-    'result.ts',
-    '',
-    ScriptTarget.ES2015,
-    /*setParentNodes=*/ false,
-    ScriptKind.TS
-  );
-  const printer = createPrinter({newLine: NewLineKind.LineFeed});
+	const source = createSourceFile(
+		"result.ts",
+		"",
+		ScriptTarget.ES2015,
+		/*setParentNodes=*/ false,
+		ScriptKind.TS
+	);
+	const printer = createPrinter({ newLine: NewLineKind.LineFeed });
 
-  for (const helperType of HelperTypes(context, properties)) {
-    write(printer.printNode(EmitHint.Unspecified, helperType, source));
-    write('\n');
-  }
-  write('\n');
+	for (const helperType of HelperTypes(context, properties)) {
+		write(printer.printNode(EmitHint.Unspecified, helperType, source));
+		write("\n");
+	}
+	write("\n");
 
-  for (const cls of sorted) {
-    if (cls.deprecated && !includeDeprecated) continue;
+	for (const cls of sorted) {
+		if (cls.deprecated && !includeDeprecated) continue;
 
-    for (const node of cls.toNode(context, properties)) {
-      const result = printer.printNode(EmitHint.Unspecified, node, source);
-      await write(result);
-      await write('\n');
-    }
-    await write('\n');
-  }
+		for (const node of cls.toNode(context, properties)) {
+			const result = printer.printNode(
+				EmitHint.Unspecified,
+				node,
+				source
+			);
+			await write(result);
+			await write("\n");
+		}
+		await write("\n");
+	}
 }

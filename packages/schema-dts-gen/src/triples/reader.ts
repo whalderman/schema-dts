@@ -13,48 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import fs from 'fs/promises';
+import fs from "node:fs/promises";
 
-import { Parser, Store } from 'n3';
-import type { Quad } from 'n3';
+import { Parser, Store } from "n3";
+import type { Quad } from "n3";
 
 function asQuads(data: string): Quad[] {
-  return new Parser({}).parse(data);
+	return new Parser({}).parse(data);
 }
 
 /**
  * Loads schema all Triples from a given Schema file and version.
  */
 export async function load(url: string): Promise<Store> {
-  const quads = await handleUrl(url);
-  return process(quads);
+	const quads = await handleUrl(url);
+	return process(quads);
 }
 
 /**
  * does the same as load(), but for a local file
  */
 export async function loadFile(path: string): Promise<Store> {
-  const quads = await handleFile(path);
-  return process(quads);
+	const quads = await handleFile(path);
+	return process(quads);
 }
 
 async function handleFile(path: string): Promise<Quad[]> {
-  const fileStr = await fs.readFile(path, { encoding: 'utf8' });
-  return asQuads(fileStr);
+	const fileStr = await fs.readFile(path, { encoding: "utf8" });
+	return asQuads(fileStr);
 }
 
 async function handleUrl(url: string): Promise<Quad[]> {
-  const res = await fetch(url);
-  const text = await res.text();
-  return asQuads(text);
+	const res = await fetch(url);
+	const text = await res.text();
+	return asQuads(text);
 }
 
 export function process(quads: Quad[]): Store {
-  // Inexplicably, local files end up in the public schema for
-  // certain layer overlays. (?)
-  const filtered = quads.filter((quad) => !(
-    quad.subject.termType === 'NamedNode' &&
-    quad.subject.value.includes('file:///')
-  ));
-  return new Store(filtered);
+	// Inexplicably, local files end up in the public schema for
+	// certain layer overlays. (?)
+	const filtered = quads.filter(
+		(quad) =>
+			!(
+				quad.subject.termType === "NamedNode" &&
+				quad.subject.value.includes("file:///")
+			)
+	);
+	return new Store(filtered);
 }

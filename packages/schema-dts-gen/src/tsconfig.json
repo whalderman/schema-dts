@@ -1,8 +1,8 @@
 {
-  "extends": "../../../tsconfig-base.json",
-  "compilerOptions": {
-    "outDir": "../dist/src",
-    "rootDir": ".",
-    "skipLibCheck": true
-  }
+	"extends": "../../../tsconfig-base.json",
+	"compilerOptions": {
+		"outDir": "../dist/src",
+		"rootDir": ".",
+		"skipLibCheck": true
+	}
 }

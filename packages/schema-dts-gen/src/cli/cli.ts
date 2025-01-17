@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {main} from './internal/main.js';
+import { main } from "./internal/main.js";
 
 function write(content: string) {
-  process.stdout.write(content, 'utf-8');
+	process.stdout.write(content, "utf-8");
 }
 
 main(write)
-  .then(() => {
-    process.exit();
-  })
-  .catch(e => {
-    console.error(e);
-    process.abort();
-  });
+	.then(() => {
+		process.exit();
+	})
+	.catch((e) => {
+		console.error(e);
+		process.abort();
+	});

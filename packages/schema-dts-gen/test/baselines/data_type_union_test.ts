@@ -17,13 +17,13 @@
  * correspond to full comparisons of a generate .ts output based on a set of
  * Triples representing an entire ontology.
  */
-import {basename} from 'path';
+import { basename } from "node:path";
 
-import {inlineCli} from '../helpers/main_driver.js';
+import { inlineCli } from "../helpers/main_driver.js";
 
 test(`baseline_${basename(import.meta.url)}`, async () => {
-  const {actual} = await inlineCli(
-    `
+	const { actual } = await inlineCli(
+		`
 <http://schema.org/name> <http://schema.org/rangeIncludes> <http://schema.org/Text> .
 <http://schema.org/name> <http://schema.org/domainIncludes> <http://schema.org/Thing> .
 <http://schema.org/name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
@@ -39,10 +39,10 @@ test(`baseline_${basename(import.meta.url)}`, async () => {
 <http://schema.org/DataType> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
 <http://schema.org/DataType> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.w3.org/2000/01/rdf-schema#Class> .
       `,
-    ['--ontology', `https://fake.com/${basename(import.meta.url)}.nt`]
-  );
+		["--ontology", `https://fake.com/${basename(import.meta.url)}.nt`]
+	);
 
-  expect(actual).toMatchInlineSnapshot(`
+	expect(actual).toMatchInlineSnapshot(`
     "/** Used at the top-level node to indicate the context for the JSON-LD objects used. The context provided in this type is compatible with the keys and URLs in the rest of this generated file. */
     export type WithContext<T extends Thing> = T & {
         "@context": "https://schema.org";

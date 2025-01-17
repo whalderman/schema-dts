@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import {ok} from 'assert';
+import { ok } from "node:assert";
 
 export function assert<T>(
-  item: T | null | undefined,
-  message?: string | Error
+	item: T | null | undefined,
+	message?: string | Error
 ): asserts item is T {
-  ok(item, message);
+	ok(item, message);
 }
 
 export function assertIs<T, U extends T>(
-  item: T,
-  assertion: (i: T) => i is U,
-  message?: string
+	item: T,
+	assertion: (i: T) => i is U,
+	message?: string
 ): asserts item is U {
-  ok(assertion(item), message);
+	ok(assertion(item), message);
 }

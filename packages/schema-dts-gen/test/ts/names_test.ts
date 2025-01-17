@@ -13,44 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamedNode} from 'n3';
-import {toClassName} from '../../src/ts/util/names.js';
+import { NamedNode } from "n3";
+import { toClassName } from "../../src/ts/util/names.js";
 
 function parseNamed(url: string) {
-  return new NamedNode(url);
+	return new NamedNode(url);
 }
 
-describe('toClassName', () => {
-  it('operates normally, with typical inputs', () => {
-    expect(toClassName(parseNamed('https://schema.org/Person'))).toBe('Person');
-    expect(toClassName(parseNamed('https://schema.org/Person3'))).toBe(
-      'Person3'
-    );
-    expect(toClassName(parseNamed('http://schema.org/Person'))).toBe('Person');
-    expect(
-      toClassName(parseNamed('http://schema.org/Organization4Organization'))
-    ).toBe('Organization4Organization');
-  });
+describe("toClassName", () => {
+	it("operates normally, with typical inputs", () => {
+		expect(toClassName(parseNamed("https://schema.org/Person"))).toBe(
+			"Person"
+		);
+		expect(toClassName(parseNamed("https://schema.org/Person3"))).toBe(
+			"Person3"
+		);
+		expect(toClassName(parseNamed("http://schema.org/Person"))).toBe(
+			"Person"
+		);
+		expect(
+			toClassName(
+				parseNamed("http://schema.org/Organization4Organization")
+			)
+		).toBe("Organization4Organization");
+	});
 
-  it('handles illegal TypeScript identifier characters', () => {
-    expect(toClassName(parseNamed('https://schema.org/Person-4'))).toBe(
-      'Person_4'
-    );
-    expect(toClassName(parseNamed('https://schema.org/Person%4'))).toBe(
-      'Person_4'
-    );
-    expect(toClassName(parseNamed('https://schema.org/Person%204'))).toBe(
-      'Person_4'
-    );
-    expect(toClassName(parseNamed('https://schema.org/Person, 4'))).toBe(
-      'Person__4'
-    );
+	it("handles illegal TypeScript identifier characters", () => {
+		expect(toClassName(parseNamed("https://schema.org/Person-4"))).toBe(
+			"Person_4"
+		);
+		expect(toClassName(parseNamed("https://schema.org/Person%4"))).toBe(
+			"Person_4"
+		);
+		expect(toClassName(parseNamed("https://schema.org/Person%204"))).toBe(
+			"Person_4"
+		);
+		expect(toClassName(parseNamed("https://schema.org/Person, 4"))).toBe(
+			"Person__4"
+		);
 
-    expect(toClassName(parseNamed('https://schema.org/3DModel'))).toBe(
-      '_3DModel'
-    );
-    expect(toClassName(parseNamed('https://schema.org/3DModel-5'))).toBe(
-      '_3DModel_5'
-    );
-  });
+		expect(toClassName(parseNamed("https://schema.org/3DModel"))).toBe(
+			"_3DModel"
+		);
+		expect(toClassName(parseNamed("https://schema.org/3DModel-5"))).toBe(
+			"_3DModel_5"
+		);
+	});
 });

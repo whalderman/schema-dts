@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamedNode, Quad} from 'n3';
-import {shortStr} from '../index.js';
-import {Log} from '../logging/index.js';
+import type { NamedNode, Quad } from "n3";
+import { shortStr } from "../index.js";
+import { Log } from "../logging/index.js";
 
-import {IsPropertyType, TypedTopic} from '../triples/wellKnown.js';
-import {ClassMap} from '../ts/class.js';
-import {PropertyType} from '../ts/property.js';
-import {assertIs} from '../util/assert.js';
+import { IsPropertyType, type TypedTopic } from "../triples/wellKnown.js";
+import type { ClassMap } from "../ts/class.js";
+import { PropertyType } from "../ts/property.js";
+import { assertIs } from "../util/assert.js";
 
 /**
  * Annotates classes with any Property values they blong to.
@@ -29,29 +29,37 @@ import {assertIs} from '../util/assert.js';
  * @param classes return value of `ProcessClasses`.
  */
 export function ProcessProperties(
-  topics: readonly TypedTopic[],
-  classes: ClassMap
+	topics: readonly TypedTopic[],
+	classes: ClassMap
 ) {
-  for (const topic of topics) {
-    // Skip Topics that have no 'Property' Type.
-    if (!topic.types.some(IsPropertyType)) continue;
+	for (const topic of topics) {
+		// Skip Topics that have no 'Property' Type.
+		if (!topic.types.some(IsPropertyType)) continue;
 
-    const rest: Quad[] = [];
-    assertIs(topic.subject, (s): s is NamedNode => s.termType === 'NamedNode');
-    const property = new PropertyType(topic.subject);
-    for (const value of topic.quads) {
-      const added = property.add(value, classes);
-      if (!added) {
-        rest.push(value);
-      }
-    }
-    // Go over RangeIncludes or DomainIncludes:
-    if (rest.length > 0) {
-      Log(
-        `Still unadded for property: ${shortStr(topic.subject)}:\n\t${rest
-          .map(q => `(${shortStr(q.predicate)} ${shortStr(q.object)})`)
-          .join('\n\t')}`
-      );
-    }
-  }
+		const rest: Quad[] = [];
+		assertIs(
+			topic.subject,
+			(s): s is NamedNode => s.termType === "NamedNode"
+		);
+		const property = new PropertyType(topic.subject);
+		for (const value of topic.quads) {
+			const added = property.add(value, classes);
+			if (!added) {
+				rest.push(value);
+			}
+		}
+		// Go over RangeIncludes or DomainIncludes:
+		if (rest.length > 0) {
+			Log(
+				`Still unadded for property: ${shortStr(
+					topic.subject
+				)}:\n\t${rest
+					.map(
+						(q) =>
+							`(${shortStr(q.predicate)} ${shortStr(q.object)})`
+					)
+					.join("\n\t")}`
+			);
+		}
+	}
 }
